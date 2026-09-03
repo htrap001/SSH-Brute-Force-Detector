@@ -9,21 +9,15 @@ A Bash script designed to parse Linux authentication logs (`/var/log/auth.log` o
 ```bash
 #!/usr/bin/env bash
 
-# Default log file path or accept from first argument
 LOG_FILE="${1:-/var/log/auth.log}"
 THRESHOLD=5
 
-# Verify log file exists and is readable
+# Verifying log file exists and is readable
 if [[ ! -r "$LOG_FILE" ]]; then
   echo "Error: Cannot read log file '$LOG_FILE'" >&2
   exit 1
 fi
 
-# Pipeline:
-# 1. awk: Filter for failed password lines and extract the IP address following 'from'
-# 2. sort: Sort IPs lexicographically so duplicate entries are adjacent
-# 3. uniq -c: Aggregate adjacent duplicates and prefix with occurrence count
-# 4. awk: Filter IPs with count > THRESHOLD and print alert message
 awk '/sshd.*Failed password/ {
     for (i = 1; i <= NF; i++) {
         if ($i == "from") {
@@ -38,5 +32,13 @@ awk '/sshd.*Failed password/ {
     printf "ALERT: IP %s has %d failed attempts\n", $2, $1
 }'
 ```
-
+Give excecution permission to this script
+```
+chmod +x your_scripname.sh
+```
+Then with the help of AI i created a mock log file named mock.log
+<img width="1920" height="1080" alt="Screenshot (588)" src="https://github.com/user-attachments/assets/869bba59-63f1-4280-b1ef-2060d61d2f6e" />
+after this i ran my bash script
+<img width="1920" height="1080" alt="Screenshot (586)" src="https://github.com/user-attachments/assets/876d824b-0b53-4601-a3f7-701d425edb9a" />
+This shows the script is working fine.
 ---
