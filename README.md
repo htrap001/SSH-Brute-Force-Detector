@@ -12,10 +12,6 @@ A Bash script designed to parse Linux authentication logs (`/var/log/auth.log` o
 LOG_FILE="${1:-/var/log/auth.log}"
 THRESHOLD=5
 
-# Verifying log file exists and is readable
-if [[ ! -r "$LOG_FILE" ]]; then
-  echo "Error: Cannot read log file '$LOG_FILE'" >&2
-  exit 1
 fi
 
 awk '/sshd.*Failed password/ {
